@@ -7,6 +7,7 @@ const fileUpload = require('express-fileupload')
 const path = require('path')
 const user = require('./routes/user')
 
+
 // Conection MongoDB
 require('./db/mongo')
 
@@ -23,6 +24,7 @@ app.use(fileUpload({
 }))
 app.use(express.static('../client/build'))
 app.use('/api', user)
+
 
 // Setting
 const port = (process.env.PORT || 3005)
