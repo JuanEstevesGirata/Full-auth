@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-// import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
-// import {dispatchLogin} from '../../../redux/actions/authAction'
-// import {useDispatch} from 'react-redux'
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
+import {dispatchLogin} from '../../../redux/actions/authAction'
+import {useDispatch} from 'react-redux'
 // import { GoogleLogin } from 'react-google-login';
 // import FacebookLogin from 'react-facebook-login';
 
@@ -16,9 +16,9 @@ const initialState = {
 }
 
 function Login() {
-    const [user, setUser] = useState(initialState)
-//     const dispatch = useDispatch()
-//     const history = useHistory()
+    const [user, setUser] = useState(initialState)  //Inicializo hooks
+    const dispatch = useDispatch()                  //Inicializo hooks
+    const navigate  = useNavigate()                    //Inicializo hooks
 
     const {email, password, err, success} = user
 
@@ -31,18 +31,18 @@ function Login() {
     const handleSubmit = async e => {
         e.preventDefault()
         try {
-            const res = await axios.post('/api/login', {email, password})
+            const res = await axios.post('http://localhost:3005/api/login', {email, password})
             console.log(res)
-             //  setUser({...user, err: '', success: res.data.msg})
-
+            setUser({...user, err: '', success: res.data.msg})
+            console.log(user)
             //  localStorage.setItem('firstLogin', true)
 
-            //  dispatch(dispatchLogin())
-            //  history.push("/")
+            dispatch(dispatchLogin())
+            navigate('/')
 
         } catch (err) {
-             err.response.data.msg && 
-             setUser({...user, err: err.response.data.msg, success: ''})
+            err.response.data.error && 
+            setUser({...user, err: err.response.data.error, success: ''})
         }
     }
 
@@ -80,8 +80,8 @@ function Login() {
     return (
         <div className="login_page">
             <h2>Login</h2>
-            {/* {err && showErrMsg(err)}
-            {success && showSuccessMsg(success)} */}
+            {err && showErrMsg(err)}
+            {success && showSuccessMsg(success)}
 
             <form onSubmit={handleSubmit}>
                  <div>
